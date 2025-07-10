@@ -10,40 +10,57 @@
                     "avg_ms": 8.37,
                     "max_ms": 55.864,
                     "min_ms": 2.594,
-                    "anomaly_score": 76.26,
-                    "reason": "High internal performance volatility and/or wide performance range."
+                    "anomaly_score": 4.33,
+                    "score_breakdown": {
+                        "volatility_ratio_score": 2.04,
+                        "volatility_range_score": 3.99,
+                        "contribution_pct": 80.37,
+                        "absolute_cost_factor": 2.24
+                    },
+                    "problem_indicators": {
+                        "contribution": "Very_High",
+                        "volatility": "Medium",
+                        "absolute_cost": "Very_High",
+                        "performance_range": "Very_Wide"
+                    }
                 },
                 {
                     "Event": "Exclusive/GameThread/Pathfinding",
                     "avg_ms": 0.398,
                     "max_ms": 15.924,
                     "min_ms": 0.0,
-                    "anomaly_score": 14.69,
-                    "reason": "High internal performance volatility and/or wide performance range."
+                    "anomaly_score": 0.69,
+                    "score_breakdown": {
+                        "volatility_ratio_score": 3.71,
+                        "volatility_range_score": 2.83,
+                        "contribution_pct": 3.82,
+                        "absolute_cost_factor": 0.34
+                    },
+                    "problem_indicators": {
+                        "contribution": "Low",
+                        "volatility": "High",
+                        "absolute_cost": "Medium",
+                        "performance_range": "Very_Wide"
+                    }
                 },
                 {
                     "Event": "Exclusive/GameThread/AIPerception",
                     "avg_ms": 0.888,
                     "max_ms": 2.793,
                     "min_ms": 0.449,
-                    "anomaly_score": 3.24,
-                    "reason": "High internal performance volatility and/or wide performance range."
-                },
-                {
-                    "Event": "ComponentTickTime/SPMonsterAdvancedPathFollowingComponent/BP_Pal_AICBase_C/SPMonsterAdvancedPathFollowingComponent",
-                    "avg_ms": 0.497,
-                    "max_ms": 2.241,
-                    "min_ms": 0.111,
-                    "anomaly_score": 2.91,
-                    "reason": "High internal performance volatility and/or wide performance range."
-                },
-                {
-                    "Event": "SPGameplay/SPLuaTickable/_SP.DS.SPGameDSSOCAITaskManager",
-                    "avg_ms": 0.057,
-                    "max_ms": 1.364,
-                    "min_ms": 0.011,
-                    "anomaly_score": 2.91,
-                    "reason": "High internal performance volatility and/or wide performance range."
+                    "anomaly_score": 0.54,
+                    "score_breakdown": {
+                        "volatility_ratio_score": 1.42,
+                        "volatility_range_score": 1.21,
+                        "contribution_pct": 8.53,
+                        "absolute_cost_factor": 0.64
+                    },
+                    "problem_indicators": {
+                        "contribution": "Low",
+                        "volatility": "Medium",
+                        "absolute_cost": "High",
+                        "performance_range": "Wide"
+                    }
                 }
             ]
         },
@@ -51,16 +68,7 @@
             "module_name": "Movement",
             "average_ms": 7.476,
             "threshold_ms": 3.0,
-            "culprit_sub_functions": [
-                {
-                    "Event": "SPGameplay/GameThread/SPCharacterMovement",
-                    "avg_ms": 7.476,
-                    "max_ms": 39.422,
-                    "min_ms": 4.116,
-                    "anomaly_score": 55.91,
-                    "reason": "High internal performance volatility and/or wide performance range."
-                }
-            ]
+            "culprit_sub_functions": []
         },
         {
             "module_name": "Ability",
@@ -72,16 +80,19 @@
                     "avg_ms": 4.188,
                     "max_ms": 36.163,
                     "min_ms": 0.394,
-                    "anomaly_score": 42.36,
-                    "reason": "High internal performance volatility and/or wide performance range."
-                },
-                {
-                    "Event": "SPGameplay/GameThread/ActorTickSPWeapon",
-                    "avg_ms": 0.054,
-                    "max_ms": 0.435,
-                    "min_ms": 0.04,
-                    "anomaly_score": 0.77,
-                    "reason": "High internal performance volatility and/or wide performance range."
+                    "anomaly_score": 3.33,
+                    "score_breakdown": {
+                        "volatility_ratio_score": 2.27,
+                        "volatility_range_score": 3.6,
+                        "contribution_pct": 98.73,
+                        "absolute_cost_factor": 1.65
+                    },
+                    "problem_indicators": {
+                        "contribution": "Very_High",
+                        "volatility": "Medium",
+                        "absolute_cost": "Very_High",
+                        "performance_range": "Very_Wide"
+                    }
                 }
             ]
         },
@@ -95,24 +106,19 @@
                     "avg_ms": 4.276,
                     "max_ms": 15.32,
                     "min_ms": 0.887,
-                    "anomaly_score": 21.98,
-                    "reason": "High internal performance volatility and/or wide performance range."
-                },
-                {
-                    "Event": "Exclusive/GameThread/ServerReplicateActors",
-                    "avg_ms": 4.892,
-                    "max_ms": 8.359,
-                    "min_ms": 3.351,
-                    "anomaly_score": 10.53,
-                    "reason": "High internal performance volatility and/or wide performance range."
-                },
-                {
-                    "Event": "Exclusive/GameThread/NetworkOutgoing",
-                    "avg_ms": 0.238,
-                    "max_ms": 7.612,
-                    "min_ms": 0.127,
-                    "anomaly_score": 9.25,
-                    "reason": "High internal performance volatility and/or wide performance range."
+                    "anomaly_score": 2.23,
+                    "score_breakdown": {
+                        "volatility_ratio_score": 1.52,
+                        "volatility_range_score": 2.74,
+                        "contribution_pct": 45.45,
+                        "absolute_cost_factor": 1.66
+                    },
+                    "problem_indicators": {
+                        "contribution": "Very_High",
+                        "volatility": "Medium",
+                        "absolute_cost": "Very_High",
+                        "performance_range": "Very_Wide"
+                    }
                 }
             ]
         },
@@ -126,32 +132,38 @@
                     "avg_ms": 4.08,
                     "max_ms": 38.537,
                     "min_ms": 1.421,
-                    "anomaly_score": 43.39,
-                    "reason": "High internal performance volatility and/or wide performance range."
+                    "anomaly_score": 3.13,
+                    "score_breakdown": {
+                        "volatility_ratio_score": 2.35,
+                        "volatility_range_score": 3.64,
+                        "contribution_pct": 64.7,
+                        "absolute_cost_factor": 1.63
+                    },
+                    "problem_indicators": {
+                        "contribution": "Very_High",
+                        "volatility": "Medium",
+                        "absolute_cost": "Very_High",
+                        "performance_range": "Very_Wide"
+                    }
                 },
                 {
                     "Event": "Exclusive/GameThread/Physics_ProcessPhysScene",
                     "avg_ms": 1.837,
                     "max_ms": 26.625,
                     "min_ms": 0.16,
-                    "anomaly_score": 25.76,
-                    "reason": "High internal performance volatility and/or wide performance range."
-                },
-                {
-                    "Event": "Exclusive/GameThread/StartPhysicsMisc",
-                    "avg_ms": 0.365,
-                    "max_ms": 3.727,
-                    "min_ms": 0.256,
-                    "anomaly_score": 4.94,
-                    "reason": "High internal performance volatility and/or wide performance range."
-                },
-                {
-                    "Event": "Exclusive/GameThread/Physics_ExecuteTick2",
-                    "avg_ms": 0.015,
-                    "max_ms": 0.067,
-                    "min_ms": 0.008,
-                    "anomaly_score": 0.1,
-                    "reason": "High internal performance volatility and/or wide performance range."
+                    "anomaly_score": 1.96,
+                    "score_breakdown": {
+                        "volatility_ratio_score": 2.74,
+                        "volatility_range_score": 3.31,
+                        "contribution_pct": 29.13,
+                        "absolute_cost_factor": 1.04
+                    },
+                    "problem_indicators": {
+                        "contribution": "High",
+                        "volatility": "High",
+                        "absolute_cost": "High",
+                        "performance_range": "Very_Wide"
+                    }
                 }
             ]
         },
@@ -165,40 +177,57 @@
                     "avg_ms": 2.884,
                     "max_ms": 31.992,
                     "min_ms": 0.0,
-                    "anomaly_score": 33.85,
-                    "reason": "High internal performance volatility and/or wide performance range."
-                },
-                {
-                    "Event": "SPGameplay/SPLuaTickable/_SP.DS.DSBuildingFunctionManager",
-                    "avg_ms": 0.655,
-                    "max_ms": 41.215,
-                    "min_ms": 0.153,
-                    "anomaly_score": 25.73,
-                    "reason": "High internal performance volatility and/or wide performance range."
-                },
-                {
-                    "Event": "SPGameplay/SPLuaDiscreteTask/SPBuildingActorScriptTerminal",
-                    "avg_ms": 0.12,
-                    "max_ms": 43.066,
-                    "min_ms": 0.0,
-                    "anomaly_score": 24.96,
-                    "reason": "High internal performance volatility and/or wide performance range."
+                    "anomaly_score": 2.52,
+                    "score_breakdown": {
+                        "volatility_ratio_score": 2.49,
+                        "volatility_range_score": 3.5,
+                        "contribution_pct": 39.91,
+                        "absolute_cost_factor": 1.36
+                    },
+                    "problem_indicators": {
+                        "contribution": "High",
+                        "volatility": "High",
+                        "absolute_cost": "Very_High",
+                        "performance_range": "Very_Wide"
+                    }
                 },
                 {
                     "Event": "SPGameplay/SPLuaDiscreteTask/SPGameDSSOCAITaskManager",
                     "avg_ms": 2.396,
                     "max_ms": 21.904,
                     "min_ms": 0.03,
-                    "anomaly_score": 24.63,
-                    "reason": "High internal performance volatility and/or wide performance range."
+                    "anomaly_score": 2.06,
+                    "score_breakdown": {
+                        "volatility_ratio_score": 2.32,
+                        "volatility_range_score": 3.13,
+                        "contribution_pct": 33.16,
+                        "absolute_cost_factor": 1.22
+                    },
+                    "problem_indicators": {
+                        "contribution": "High",
+                        "volatility": "Medium",
+                        "absolute_cost": "Very_High",
+                        "performance_range": "Very_Wide"
+                    }
                 },
                 {
-                    "Event": "SPGameplay/SPLuaDiscreteTask/SPGameDSElectricSubManager",
-                    "avg_ms": 0.784,
-                    "max_ms": 16.708,
-                    "min_ms": 0.0,
-                    "anomaly_score": 15.92,
-                    "reason": "High internal performance volatility and/or wide performance range."
+                    "Event": "SPGameplay/SPLuaTickable/_SP.DS.DSBuildingFunctionManager",
+                    "avg_ms": 0.655,
+                    "max_ms": 41.215,
+                    "min_ms": 0.153,
+                    "anomaly_score": 1.23,
+                    "score_breakdown": {
+                        "volatility_ratio_score": 4.16,
+                        "volatility_range_score": 3.74,
+                        "contribution_pct": 9.06,
+                        "absolute_cost_factor": 0.5
+                    },
+                    "problem_indicators": {
+                        "contribution": "Low",
+                        "volatility": "Extreme",
+                        "absolute_cost": "High",
+                        "performance_range": "Very_Wide"
+                    }
                 }
             ]
         },
@@ -208,44 +237,80 @@
             "threshold_ms": 3.0,
             "culprit_sub_functions": [
                 {
-                    "Event": "Exclusive/GameThread/GarbageCollection",
-                    "avg_ms": 0.403,
-                    "max_ms": 206.908,
-                    "min_ms": 0.0,
-                    "anomaly_score": 46.75,
-                    "reason": "High internal performance volatility and/or wide performance range."
-                },
-                {
                     "Event": "Exclusive/GameThread/PrePhysicsMisc",
                     "avg_ms": 4.546,
                     "max_ms": 36.485,
                     "min_ms": 1.989,
-                    "anomaly_score": 43.55,
-                    "reason": "High internal performance volatility and/or wide performance range."
+                    "anomaly_score": 3.02,
+                    "score_breakdown": {
+                        "volatility_ratio_score": 2.2,
+                        "volatility_range_score": 3.57,
+                        "contribution_pct": 42.69,
+                        "absolute_cost_factor": 1.71
+                    },
+                    "problem_indicators": {
+                        "contribution": "Very_High",
+                        "volatility": "Medium",
+                        "absolute_cost": "Very_High",
+                        "performance_range": "Very_Wide"
+                    }
                 },
                 {
-                    "Event": "Exclusive/GameThread/DeferredTickTime",
-                    "avg_ms": 0.223,
-                    "max_ms": 23.87,
-                    "min_ms": 0.033,
-                    "anomaly_score": 18.4,
-                    "reason": "High internal performance volatility and/or wide performance range."
+                    "Event": "Exclusive/GameThread/QueueTicks",
+                    "avg_ms": 2.522,
+                    "max_ms": 8.081,
+                    "min_ms": 1.859,
+                    "anomaly_score": 1.34,
+                    "score_breakdown": {
+                        "volatility_ratio_score": 1.44,
+                        "volatility_range_score": 1.98,
+                        "contribution_pct": 23.68,
+                        "absolute_cost_factor": 1.26
+                    },
+                    "problem_indicators": {
+                        "contribution": "High",
+                        "volatility": "Medium",
+                        "absolute_cost": "Very_High",
+                        "performance_range": "Wide"
+                    }
                 },
                 {
-                    "Event": "Exclusive/GameThread/LogFlush",
-                    "avg_ms": 0.017,
-                    "max_ms": 13.334,
+                    "Event": "Exclusive/GameThread/GarbageCollection",
+                    "avg_ms": 0.403,
+                    "max_ms": 206.908,
                     "min_ms": 0.0,
-                    "anomaly_score": 18.05,
-                    "reason": "High internal performance volatility and/or wide performance range."
+                    "anomaly_score": 1.21,
+                    "score_breakdown": {
+                        "volatility_ratio_score": 6.24,
+                        "volatility_range_score": 5.34,
+                        "contribution_pct": 3.78,
+                        "absolute_cost_factor": 0.34
+                    },
+                    "problem_indicators": {
+                        "contribution": "Low",
+                        "volatility": "Extreme",
+                        "absolute_cost": "Medium",
+                        "performance_range": "Very_Wide"
+                    }
                 },
                 {
-                    "Event": "Exclusive/GameThread/TimerManager",
-                    "avg_ms": 0.133,
-                    "max_ms": 14.715,
-                    "min_ms": 0.01,
-                    "anomaly_score": 14.71,
-                    "reason": "High internal performance volatility and/or wide performance range."
+                    "Event": "Exclusive/GameThread/WorldTickMisc",
+                    "avg_ms": 1.796,
+                    "max_ms": 7.778,
+                    "min_ms": 1.32,
+                    "anomaly_score": 1.17,
+                    "score_breakdown": {
+                        "volatility_ratio_score": 1.67,
+                        "volatility_range_score": 2.01,
+                        "contribution_pct": 16.87,
+                        "absolute_cost_factor": 1.03
+                    },
+                    "problem_indicators": {
+                        "contribution": "High",
+                        "volatility": "Medium",
+                        "absolute_cost": "High",
+                        "performance_range": "Wide"
+                    }
                 }
             ]
         },
@@ -259,24 +324,19 @@
                     "avg_ms": 1.283,
                     "max_ms": 1.956,
                     "min_ms": 0.955,
-                    "anomaly_score": 1.47,
-                    "reason": "High internal performance volatility and/or wide performance range."
-                },
-                {
-                    "Event": "Exclusive/GameThread/CSVProfiler_RecordActorMonitorData",
-                    "avg_ms": 0.783,
-                    "max_ms": 1.438,
-                    "min_ms": 0.564,
-                    "anomaly_score": 1.17,
-                    "reason": "High internal performance volatility and/or wide performance range."
-                },
-                {
-                    "Event": "Exclusive/GameThread/CsvProfiler_EndFrame",
-                    "avg_ms": 0.118,
-                    "max_ms": 0.378,
-                    "min_ms": 0.055,
-                    "anomaly_score": 0.45,
-                    "reason": "High internal performance volatility and/or wide performance range."
+                    "anomaly_score": 0.61,
+                    "score_breakdown": {
+                        "volatility_ratio_score": 0.93,
+                        "volatility_range_score": 0.69,
+                        "contribution_pct": 58.72,
+                        "absolute_cost_factor": 0.83
+                    },
+                    "problem_indicators": {
+                        "contribution": "Very_High",
+                        "volatility": "Low",
+                        "absolute_cost": "High",
+                        "performance_range": "Narrow"
+                    }
                 }
             ]
         }

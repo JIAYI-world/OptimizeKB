@@ -1,6 +1,7 @@
 import pandas as pd
 import json
 import math
+import numpy as np
 # --- 配置区 (Config) ---
 
 # 规则1: 定义 GameEngineTick 的阈值
@@ -40,13 +41,18 @@ CSV_INPUT_FILE = 'profiler_data.csv'
 JSON_OUTPUT_FILE = 'performance_report.json'
 
 # --- 算法参数 ---
-# Z-score方法的标准差倍数，k越大，筛选越严格
-Z_SCORE_K = 2.0
-# 内部波动比率，用于检测尖峰
-SPIKE_RATIO = 10.0
+# # Z-score方法的标准差倍数，k越大，筛选越严格
+# Z_SCORE_K = 2.0
+# # 内部波动比率，用于检测尖峰
+# SPIKE_RATIO = 10.0
 # 单一函数耗时占模块总耗时的百分比阈值
-MAJOR_CONTRIBUTOR_THRESHOLD = 0.4 # 40%
+# MAJOR_CONTRIBUTOR_THRESHOLD = 0.4 # 40%
+WEIGHT_VOLATILITY = 0.6 # 稍微偏重于解决卡顿问题
+WEIGHT_CONTRIBUTION = 0.4
 
+# 算法参数 (V11 + 阈值调整)
+ANOMALY_SCORE_PERCENTILE_THRESHOLD = 60
+MINIMUM_ABSOLUTE_SCORE_THRESHOLD = 0.1 # 合理的阈值
 def clean_and_prepare_dataframe(df: pd.DataFrame) -> pd.DataFrame:
     """清理和预处理从CSV加载的DataFrame"""
     if 'pct' in df.columns:
@@ -141,7 +147,7 @@ def find_problematic_modules(df: pd.DataFrame, thresholds: dict) -> list:
     return problematic_modules
 
 
-def calculate_anomaly_score(sub_function_data: dict) -> float:
+def calculate_anomaly_score(sub_function_data, module_total_avg):
     """
     根据函数自身的max, min, avg计算其异常分数。
 
@@ -156,25 +162,104 @@ def calculate_anomaly_score(sub_function_data: dict) -> float:
         return 0.0
 
     epsilon = 1e-6  # 避免除以零
+    # 指标1: 内部相对波动 (Volatility Score)
+    score_vol_ratio = np.log1p(max_val / (avg_val + epsilon))
 
-    # 指标1: 波动范围 (绝对波动)
-    value_range = max_val - min_val
+    # 新增指标: 内部绝对波动 (Volatility Range Score)
+    score_vol_range = np.log1p(max_val - min_val)
 
-    # 指标2: 峰值-均值比 (相对波动)
-    spike_ratio = max_val / (avg_val + epsilon)
+    # 指标2: 贡献度分 (Contribution Score)
+    score_contrib = (avg_val / module_total_avg) if module_total_avg > 0 else 0
 
-    # 简单的加权评分模型。这里的权重可以调整。
-    # 我们给予spike_ratio更高的权重，因为它更能反映卡顿问题。
-    # avg_val也作为一个因子，因为高耗时函数的波动更值得关注。
-    # score = (0.5 * value_range) + (1.5 * spike_ratio)
+    # 指标3: 绝对耗时分 (Absolute Cost Score) - 作为加权因子
+    score_abs = np.log1p(avg_val)
 
-    score = math.log(1 + value_range) * math.log(1 + spike_ratio)
+    # 最终分数：结合了相对波动、绝对波动和贡献度
+    # 权重分配可以根据经验调整
+    final_score = score_abs * (
+            0.4 * score_vol_ratio +
+            0.2 * score_vol_range +  # Range的权重可以稍低，因为它有时会和max强相关
+            0.4 * score_contrib
+    )
+    score_details = {
+        "volatility_ratio_score": round(score_vol_ratio, 2),
+        "volatility_range_score": round(score_vol_range, 2),
+        "contribution_pct": round(score_contrib * 100, 2),
+        "absolute_cost_factor": round(score_abs, 2)
+    }
+
+    return final_score, score_details
+
+    # # 指标1: 波动范围 (绝对波动)
+    # value_range = max_val - min_val
+    #
+    # # 指标2: 峰值-均值比 (相对波动)
+    # spike_ratio = max_val / (avg_val + epsilon)
+    #
+    # # 简单的加权评分模型。这里的权重可以调整。
+    # # 我们给予spike_ratio更高的权重，因为它更能反映卡顿问题。
+    # # avg_val也作为一个因子，因为高耗时函数的波动更值得关注。
+    # # score = (0.5 * value_range) + (1.5 * spike_ratio)
+    #
+    # score = math.log(1 + value_range) * math.log(1 + spike_ratio)
 
     # 进一步加权，让平均耗时高的函数分数更高
-    score *= (1 + avg_val)
+    # score *= (1 + avg_val)
 
-    return score
+    # return score
 
+
+def get_performance_indicators(sub, module_total_avg):
+    """
+    根据函数的性能数据，生成结构化的四指标评级。
+    """
+    avg_val = sub.get('avg', 0)
+    max_val = sub.get('max', 0)
+    min_val = sub.get('min', 0)
+    epsilon = 1e-6
+
+    indicators = {}
+
+    # 1. 贡献度 (Contribution)
+    contribution_ratio = (avg_val / module_total_avg) if module_total_avg > 0 else 0
+    if contribution_ratio > 0.4:
+        indicators['contribution'] = 'Very_High'
+    elif contribution_ratio > 0.1:
+        indicators['contribution'] = 'High'
+    else:
+        indicators['contribution'] = 'Low'
+
+    # 2. 波动性 (Volatility)
+    spike_ratio = max_val / (avg_val + epsilon)
+    if spike_ratio > 50:
+        indicators['volatility'] = 'Extreme'
+    elif spike_ratio > 10:
+        indicators['volatility'] = 'High'
+    elif spike_ratio > 3:
+        indicators['volatility'] = 'Medium'
+    else:
+        indicators['volatility'] = 'Low'
+
+    # 3. 绝对开销 (Absolute Cost)
+    if avg_val > 2.0:
+        indicators['absolute_cost'] = 'Very_High'
+    elif avg_val > 0.5:
+        indicators['absolute_cost'] = 'High'
+    elif avg_val > 0.1:
+        indicators['absolute_cost'] = 'Medium'
+    else:
+        indicators['absolute_cost'] = 'Low'
+
+    # 4. 波动范围 (Performance Range) - 新增
+    value_range = max_val - min_val
+    if value_range > 10.0:  # 波动范围超过10ms，影响巨大
+        indicators['performance_range'] = 'Very_Wide'
+    elif value_range > 2.0:
+        indicators['performance_range'] = 'Wide'
+    else:
+        indicators['performance_range'] = 'Narrow'
+
+    return indicators
 
 def generate_report_from_problematic_modules(problem_modules: list) -> dict:
     """
@@ -187,8 +272,7 @@ def generate_report_from_problematic_modules(problem_modules: list) -> dict:
     for module in problem_modules:
         sub_functions = module['sub_functions']
         sub_functions = pd.DataFrame([s for s in sub_functions if s.get('avg', 0) > 0.01])
-        print("SUB-FUNCTIONS")
-        print(sub_functions)
+
 
         if sub_functions.empty:
             final_report["problem_modules"].append({
@@ -196,34 +280,51 @@ def generate_report_from_problematic_modules(problem_modules: list) -> dict:
                 "threshold_ms": THRESHOLDS.get(module['module_name']), "culprit_sub_functions": []
             })
             continue
+        module_total_avg = module['stats']['avg']
 
         # 1. 为每个子函数计算异常分数
         scored_subs = []
+        #该模块所有子函数的anomaly_score，用于计算动态的90%
+        all_scores = []
         for index, sub in sub_functions.iterrows():
-            print(sub)
-            score = calculate_anomaly_score(sub)
+
+            score, details = calculate_anomaly_score(sub,module_total_avg)
             if score > 0:
                 # 将分数添加到函数数据中，方便排序
-                sub_with_score = sub.copy()
-                sub_with_score['anomaly_score'] = score
-                scored_subs.append(sub_with_score)
+                if score > 0:
+                    sub_with_score = sub.copy()
+                    sub_with_score['anomaly_score'] = score
+                    sub_with_score['score_details'] = details
+                    scored_subs.append(sub_with_score)
+                    all_scores.append(score)
 
         # 2. 根据异常分数降序排序
-        scored_subs.sort(key=lambda x: x['anomaly_score'], reverse=True)
+        # scored_subs.sort(key=lambda x: x['anomaly_score'], reverse=True)
+        # 2. 计算动态阈值
+        score_threshold = np.percentile(all_scores, ANOMALY_SCORE_PERCENTILE_THRESHOLD)
+        # 应用最低门槛，防止报告无意义的小问题
+        final_threshold = max(score_threshold, MINIMUM_ABSOLUTE_SCORE_THRESHOLD)
+        print(f"  -> 模块 '{module['module_name']}' 的动态异常分数阈值为: {final_threshold:.2f}")
+        # 3. 筛选出超过动态阈值的函数
+        culprit_subs_with_score = [s for s in scored_subs if s['anomaly_score'] > final_threshold]
 
+        # 4. 排序和格式化输出
+        culprit_subs_with_score.sort(key=lambda x: x['anomaly_score'], reverse=True)
         # 3. 选取Top-K作为罪魁祸首
-        top_anomalies = scored_subs[:5]
+        # top_anomalies = scored_subs
 
         # 4. 格式化输出
         culprit_functions = []
-        for sub in top_anomalies:
+        for sub in culprit_subs_with_score:
+            indicators = get_performance_indicators(sub, module_total_avg)
             culprit_functions.append({
                 "Event": sub['Event'],
                 "avg_ms": round(sub['avg'], 3),
                 "max_ms": round(sub['max'], 3),
                 "min_ms": round(sub['min'], 3),
                 "anomaly_score": round(sub['anomaly_score'], 2),
-                "reason": "High internal performance volatility and/or wide performance range."
+                "score_breakdown": sub['score_details'],
+                "problem_indicators": indicators
             })
 
         final_report["problem_modules"].append({
